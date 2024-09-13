@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import Signup from './SignUp';
+import Signin from './Signin';
 
 function App() {
+  const [users, setUsers] = useState([]);
+
+  // Fetch users from the backend
+  useEffect(() => {
+    fetch('http://localhost:3000/')
+      .then((res) => res.json())
+      .then((data) => setUsers(data))
+      .catch((err) => console.error('Error fetching users:', err));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Users</h1>
+      <ul>
+        {users.length > 0 ? (
+          users.map((user) => <li key={user.USER_ID}>{user.EMAIL}</li>)
+        ) : (
+          <li>No users found</li>
+        )}
+      </ul>
+      <Signup />
+      <Signin />
     </div>
   );
 }
